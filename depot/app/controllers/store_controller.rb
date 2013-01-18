@@ -8,5 +8,6 @@ class StoreController < ApplicationController
         @message = 'You have been here ' + pluralize(counter, 'time') + ' before'
     end
     @products = Product.order(:title)
+    @cart = current_cart
   end
 end

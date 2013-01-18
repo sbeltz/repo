@@ -3,6 +3,26 @@ require 'test_helper'
 class ProductTest < ActiveSupport::TestCase
     fixtures :products
 
+    test "product price must not exceed 1000" do
+        product = Product.new(title:        "title_abcde",
+                              description:  "aaa",
+                              price:        1000.01,
+                              image_url:    "george.gif")
+        assert !product.save
+        product.price = 1000.00
+        assert product.save
+    end
+
+    test "product is not valid without a unique image url" do
+        product = Product.new(title:        "long title here",
+                              description:  "abcdefg",
+                              price:        34.23,
+                              image_url:    "fake1.jpg")
+        assert !product.save
+        product.image_url = "thisshouldbeokay.jpg"
+        assert product.save
+    end
+
     test "product is not valid without a unique title" do
         product = Product.new(title:        products(:ruby).title,
                               description:  "yyy",

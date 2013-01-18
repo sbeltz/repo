@@ -48,7 +48,7 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to @line_item.cart }
+        format.html { redirect_to store_url }
         format.json { render json: @line_item, status: :created, location: @line_item }
       else
         format.html { render action: "new" }
@@ -77,10 +77,15 @@ class LineItemsController < ApplicationController
   # DELETE /line_items/1.json
   def destroy
     @line_item = LineItem.find(params[:id])
-    @line_item.destroy
+    if @line_item.quantity == 1
+        @line_item.destroy
+    else
+        @line_item.quantity -= 1
+        @line_item.save
+    end
 
     respond_to do |format|
-      format.html { redirect_to line_items_url }
+      format.html { redirect_to store_url, notice: 'Item has been removed from the cart.' }
       format.json { head :no_content }
     end
   end
